@@ -2,8 +2,6 @@ from typing import Sequence
 
 from coboml.util import Atom, AtomType, Statement, Paragraph
 
-KEYWORD = 'keyword'
-STRING = 'string'
 WITH = 'WITH'
 
 ESCAPES = {
@@ -33,7 +31,6 @@ def parse_line(line: str) -> Statement:
                     raise RuntimeError(f"Invalid escape char: {tmp_char}")
             elif tmp_char == '"':
                 out.append(Atom(AtomType.String, tmp))
-                out.append({'type': STRING, 'value': tmp})
                 is_string = False
                 tmp = ""
                 continue

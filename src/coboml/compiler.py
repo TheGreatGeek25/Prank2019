@@ -1,5 +1,5 @@
 import coboml.parser as parser
-from coboml.util import Statement
+from coboml.util import Statement, Paragraph, AtomType
 
 from typing import Sequence
 
@@ -8,20 +8,18 @@ def compile_COBOML(src: str) -> str:
     return compile_parsed_COBOML(parser.parse(src))
 
 
-def compile_parsed_COBOML(parsed: Sequence[Statement]) -> str:
+def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
     pass
 
 
-def _compile_step1(code: Sequence[Statement]) -> Sequence[Statement]:
+def _compile_paragraph_step1(code: Sequence[Paragraph]) -> Sequence[Paragraph]:
     pass
 
 
-def _get_first_with(code: Sequence[Statement]):
-    pass
-
-
-def _is_step1_complete(code: Sequence[Statement]) -> bool:
-    for command in code:
-        if command['type'] == parser.KEYWORD and command['value'] == parser.WITH:
-            return False
+def _is_step1_complete(code: Sequence[Paragraph]) -> bool:
+    for paragraph in code:
+        for command in paragraph.get_statements():
+            if command.get_atoms()[0].get_atom_type() == AtomType.KEYWORD \
+                    and command.get_atoms()[0].get_value() == parser.WITH:
+                return False
     return True
