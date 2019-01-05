@@ -12,7 +12,7 @@ def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
     pass
 
 
-def _compile_paragraph_step1(code: Sequence[Paragraph]) -> Sequence[Paragraph]:
+def _compile_paragraph_step1(paragraph: Paragraph) -> Paragraph:
     pass
 
 
