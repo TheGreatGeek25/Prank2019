@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Dict
 from enum import Enum, auto
 
 
@@ -25,15 +25,10 @@ class Atom:
         return self.atom_type == other.get_atom_type() and self.value == other.get_value()
 
 
-class Modifier:
-    pass
-
-
 class Statement:
 
-    def __init__(self, parsed_command: Sequence[Atom], modifiers: Sequence[Modifier] = None):
+    def __init__(self, parsed_command: Sequence[Atom]):
         self.atoms = tuple(parsed_command)
-        self.modifiers = modifiers if modifiers is not None else ()
 
     def get_atoms(self):
         return self.atoms
@@ -41,9 +36,24 @@ class Statement:
 
 class Paragraph:
 
-    def __init__(self, statements: Sequence[Statement], modifiers: Sequence[Modifier] = None):
+    def __init__(self, statements: Sequence[Statement]):
         self.statements = tuple(statements)
-        self.modifiers = modifiers if modifiers is not None else ()
 
     def get_statements(self) -> Sequence[Statement]:
         return self.statements
+
+
+def html_escape_quotes(html: str) -> str:
+    return html.replace('"', '&quot;').replace("'", '&#39;')
+
+
+def str_tag_params(tag_params: Dict[str, str]) -> str:
+    return ' '.join(map(lambda kv: '"{}"="{}"'.format(*map(html_escape_quotes, kv)), tag_params.items()))
+
+
+class FormatDict(dict):
+    def __getitem__(self, item):
+        try:
+            return super().__getitem__(item)
+        except KeyError:
+            return "{" + str(item) + "}"
