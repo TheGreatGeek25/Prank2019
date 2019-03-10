@@ -1,7 +1,8 @@
 import coboml.parser as parser
-from coboml.util import Statement, Paragraph, AtomType, html_escape_quotes
+from coboml.util import Statement, Paragraph, AtomType
 
-from typing import Sequence, Dict, Callable, Tuple, Any
+from typing import Sequence, Dict, Callable, Any
+import re
 
 
 class IFElement:  # TODO
@@ -69,6 +70,11 @@ class IFModifierBuilder:
         return self.builder(args)
 
 
+TEXT_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TEXT"), (AtomType.KEYWORD, re.compile("(?s).*")))
+IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
+                 (AtomType.KEYWORD, "FROM"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
+
+
 def compile_COBOML(src: str) -> str:
     return compile_parsed_COBOML(parser.parse(src))
 
@@ -77,7 +83,32 @@ def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
     pass
 
 
-def _compile_paragraph(paragraph: Paragraph) -> IFParagraph:
+def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFElement, int):
+    """Returns the IFElements and the number of statements read"""
+    main_statement = statements[0]
+
+    if main_statement.matches_pattern(TEXT_PATTERN):
+        ifelement = IFText(main_statement.get_atoms()[2].get_value())
+    elif main_statement.matches_pattern(IMAGE_PATTERN):
+        raise NotImplementedError("Images have not been implemented yet")  # FIXME: Images
+    else:
+        raise ValueError("Unknown statement")
+
+    mods = []
+    for statement in statements[1:]:
+        if statement.get_atoms()[0].get_atom_type() == AtomType.KEYWORD \
+                and statement.get_atoms()[0].get_value() == parser.WITH:
+            mods.append(statement)
+        else:
+            break
+
+    for mod in mods:
+        build_modifier(mod).get_fun()(ifelement)  # Uses side effects :(
+
+    return ifelement, len(mods) + 1
+
+
+def _compile1_paragraph(paragraph: Paragraph) -> IFParagraph:
     statements = paragraph.get_statements()
     paragraph_mods = []
     for statement in statements:
@@ -87,7 +118,7 @@ def _compile_paragraph(paragraph: Paragraph) -> IFParagraph:
         else:
             break
 
-    # TODO
+
 
 
 def build_modifier(with_statement: Statement) -> IFModifier:
