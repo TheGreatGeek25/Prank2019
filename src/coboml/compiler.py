@@ -90,7 +90,7 @@ def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFEl
     if main_statement.matches_pattern(TEXT_PATTERN):
         ifelement = IFText(main_statement.get_atoms()[2].get_value())
     elif main_statement.matches_pattern(IMAGE_PATTERN):
-        raise NotImplementedError("Images have not been implemented yet")  # FIXME: Images
+        raise NotImplementedError("Images have not been implemented yet")  # FIXME: Implement images
     else:
         raise ValueError("Unknown statement")
 
@@ -118,7 +118,18 @@ def _compile1_paragraph(paragraph: Paragraph) -> IFParagraph:
         else:
             break
 
+    paragraph_statements = []
+    index = len(paragraph_mods)+1
+    while index < len(statements):
+        tmp_statement, tmp_index = _compile1_next_statement_with_mods(statements[index:])
+        paragraph_statements.append(tmp_statement)
+        index += tmp_index
+    ifparagraph = IFParagraph(paragraph_statements)
 
+    for mod in paragraph_mods:
+        build_modifier(mod).get_fun()(ifparagraph)  # Uses side effects :(
+
+    return ifparagraph
 
 
 def build_modifier(with_statement: Statement) -> IFModifier:
