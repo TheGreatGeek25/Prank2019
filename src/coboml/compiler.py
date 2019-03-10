@@ -10,12 +10,16 @@ class IFElement:  # TODO
 
     def __init__(self, html: str):
         self.html = html
+        self.params = {}
 
     def get_raw_html(self) -> str:
         return self.html
 
-    def get_html(self, params: Dict[str, Any]) -> str:
-        return self.html.format_map(params)
+    def set_param(self, key: str, value: str):
+        self.params[key] = value
+
+    def get_html(self) -> str:
+        return self.html.format_map(self.params)
 
     def set_html(self, html: str):
         self.html = html
@@ -36,19 +40,16 @@ class IFParagraph(IFElement):
     def set_param(self, key: str, value: str):
         self.params[key] = value
 
-    def get_html(self, params: Dict[str, Any]):
-        return self.html.format(elements=''.join(map(lambda e: e.get_html(params), self.elements))).format_map(params)
+    def get_html(self):
+        return self.html.format(elements=''.join(map(lambda e: e.get_html(self.params), self.elements))).format_map(self.params)
 
 
 class IFText(IFElement):
     """Intermediate representation of a text element"""
 
     def __init__(self, text: str):
-        IFElement.__init__(self, "")
+        IFElement.__init__(self, self.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))
         self.text = text
-
-    def get_html(self, params: Dict[str, Any]):
-        return self.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 
 class IFImage(IFElement):  # TODO
@@ -118,7 +119,15 @@ def compile_COBOML(src: str) -> str:
 
 
 def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
-    pass
+    ifparagraphs = tuple(map(_compile1_paragraph, parsed))
+    header = '<html><body>'
+    footer = '</body></html>'
+
+    tmp = header
+    for ifparagraph in ifparagraphs:
+        tmp += ifparagraph.get_html()
+
+    # TODO
 
 
 def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFElement, int):
