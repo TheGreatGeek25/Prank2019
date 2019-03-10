@@ -30,7 +30,7 @@ def parse_line(line: str) -> Statement:
                 else:
                     raise RuntimeError(f"Invalid escape char: {tmp_char}")
             elif tmp_char == '"':
-                out.append(Atom(AtomType.String, tmp))
+                out.append(Atom(AtomType.STRING, tmp))
                 is_string = False
                 tmp = ""
                 continue
