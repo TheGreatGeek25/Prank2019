@@ -21,7 +21,7 @@ class IFElement:  # TODO
         self.html = html
 
 
-class IFParagraph(IFElement):  # TODO
+class IFParagraph(IFElement):
     """Intermediate representation of a paragraph"""
 
     def __init__(self, elements: Sequence[IFElement]):
@@ -79,13 +79,13 @@ class IFModifierBuilder:
 
 MOD_BOLD_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "BOLD"), (AtomType.KEYWORD, "TEXT"))
 def _mod_bold_function(element: IFElement) -> IFElement:
-    element.set_html('<b>{}</b>'.format(element.get_raw_html()))
+    element.set_html(f'<b>{element.get_raw_html()}</b>')
     return element
 
 
 MOD_ITALIC_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "ITALIC"), (AtomType.KEYWORD, "TEXT"))
 def _mod_italic_function(element: IFElement) -> IFElement:
-    element.set_html('<i>{}</i>'.format(element.get_raw_html()))
+    element.set_html(f'<i>{element.get_raw_html()}</i>')
     return element
 
 
@@ -93,7 +93,7 @@ MOD_LINK_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "LINK"),
                     (AtomType.KEYWORD, "TO"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
 def _mod_link_builder_function(statement: Statement):
     def _mod_link_function(element: IFElement):
-        element.set_html('<a href="{}">{}</a>'.format(statement.get_atoms()[3].get_value(), element))
+        element.set_html(f'<a href="{statement.get_atoms()[3].get_value()}">{element.get_raw_html()}</a>')
         return element
     return IFModifier(_mod_link_function)
 
