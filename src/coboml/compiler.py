@@ -11,6 +11,9 @@ class IFElement:  # TODO
     def __init__(self, html: str):
         self.html = html
 
+    def get_raw_html(self) -> str:
+        return self.html
+
     def get_html(self, params: Dict[str, Any]) -> str:
         return self.html.format_map(params)
 
@@ -63,12 +66,47 @@ class IFModifier:
 
 class IFModifierBuilder:
 
-    def __init__(self, builder: Callable[[Sequence], IFModifier]):
+    def __init__(self, builder: Callable[[Statement], IFModifier]):
         self.builder = builder
 
-    def __call__(self, args: Sequence):
-        return self.builder(args)
+    def __call__(self, arg: Statement):
+        return self.builder(arg)
 
+# ==========================================
+#              Begin Modifiers
+# ==========================================
+
+
+MOD_BOLD_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "BOLD"), (AtomType.KEYWORD, "TEXT"))
+def _mod_bold_function(element: IFElement) -> IFElement:
+    element.set_html('<b>{}</b>'.format(element.get_raw_html()))
+    return element
+
+
+MOD_ITALIC_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "ITALIC"), (AtomType.KEYWORD, "TEXT"))
+def _mod_italic_function(element: IFElement) -> IFElement:
+    element.set_html('<i>{}</i>'.format(element.get_raw_html()))
+    return element
+
+
+MOD_LINK_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "LINK"),
+                    (AtomType.KEYWORD, "TO"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
+def _mod_link_builder_function(statement: Statement):
+    def _mod_link_function(element: IFElement):
+        element.set_html('<a href="{}">{}</a>'.format(statement.get_atoms()[3].get_value(), element))
+        return element
+    return IFModifier(_mod_link_function)
+
+
+modifiers = (
+    (MOD_BOLD_PATTERN, IFModifierBuilder(lambda statement: IFModifier(_mod_bold_function))),
+    (MOD_ITALIC_PATTERN, IFModifierBuilder(lambda statement: IFModifier(_mod_italic_function))),
+    (MOD_LINK_PATTERN, IFModifierBuilder(_mod_link_builder_function))
+)
+
+# ==========================================
+#               End Modifiers
+# ==========================================
 
 TEXT_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TEXT"), (AtomType.KEYWORD, re.compile("(?s).*")))
 IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
@@ -133,7 +171,10 @@ def _compile1_paragraph(paragraph: Paragraph) -> IFParagraph:
 
 
 def build_modifier(with_statement: Statement) -> IFModifier:
-    pass
+    for mod_pattern, mod_builder in modifiers:
+        if with_statement.matches_pattern(mod_pattern):
+            return mod_builder(with_statement)
+    raise ValueError('Unknown modifier')
 
 
 def _is_step1_complete(code: Sequence[Paragraph]) -> bool:
