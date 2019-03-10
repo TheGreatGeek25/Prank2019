@@ -1,5 +1,6 @@
 from typing import Sequence, Dict
 from enum import Enum, auto
+import re
 
 
 class AtomType(Enum):
@@ -30,8 +31,19 @@ class Statement:
     def __init__(self, parsed_command: Sequence[Atom]):
         self.atoms = tuple(parsed_command)
 
-    def get_atoms(self):
+    def get_atoms(self) -> Sequence[Atom]:
         return self.atoms
+
+    def matches_pattern(self, pattern) -> bool:
+        atoms = self.get_atoms()
+        for i, pattern_part in enumerate(pattern):
+            if pattern_part[0] == AtomType.KEYWORD and atoms[i].get_atom_type() == AtomType.KEYWORD:
+                if atoms[i] != pattern_part[1]:
+                    return False
+            elif pattern_part[0] == AtomType.STRING and atoms[i].get_atom_type() == AtomType.STRING:
+                if pattern_part[1].fullmatch(atoms[i].get_value()) is None:
+                    return False
+        return True
 
 
 class Paragraph:
