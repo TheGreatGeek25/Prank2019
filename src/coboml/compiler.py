@@ -55,6 +55,9 @@ class IFText(IFElement):
 class IFImage(IFElement):  # TODO
     """Intermediate representation of an image element"""
 
+    def __init__(self, src: str):
+        IFElement.__init__(self, f'<img src="{src}"/>')
+
 
 class IFModifier:
 
@@ -138,7 +141,7 @@ def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFEl
     if main_statement.matches_pattern(TEXT_PATTERN):
         ifelement = IFText(main_statement.get_atoms()[2].get_value())
     elif main_statement.matches_pattern(IMAGE_PATTERN):
-        raise NotImplementedError("Images have not been implemented yet")  # FIXME: Implement images
+        ifelement = IFImage(main_statement.get_atoms()[3].get_value())
     else:
         raise ValueError("Unknown statement")
 
