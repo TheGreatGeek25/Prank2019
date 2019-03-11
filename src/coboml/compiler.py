@@ -1,8 +1,8 @@
+import re
+from typing import Sequence, Callable
+
 import coboml.parser as parser
 from coboml.util import Statement, Paragraph, AtomType
-
-from typing import Sequence, Dict, Callable, Any
-import re
 
 
 class IFElement:  # TODO
@@ -41,7 +41,7 @@ class IFParagraph(IFElement):
         self.params[key] = value
 
     def get_html(self):
-        return self.html.format(elements=''.join(map(lambda e: e.get_html(self.params), self.elements))).format_map(self.params)
+        return self.html.format(elements=''.join(map(lambda e: e.get_html(), self.elements))).format_map(self.params)
 
 
 class IFText(IFElement):
@@ -126,8 +126,9 @@ def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
     tmp = header
     for ifparagraph in ifparagraphs:
         tmp += ifparagraph.get_html()
+    tmp += footer
 
-    # TODO
+    return tmp
 
 
 def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFElement, int):
