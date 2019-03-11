@@ -18,7 +18,7 @@ class Atom:
         return self.atom_type
 
     def get_value(self):
-        return self.get_value()
+        return self.value
 
     def __eq__(self, other):
         if not isinstance(other, Atom):
