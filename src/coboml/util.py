@@ -36,9 +36,11 @@ class Statement:
 
     def matches_pattern(self, pattern) -> bool:
         atoms = self.get_atoms()
+        if len(atoms) != len(pattern):
+            return False
         for i, pattern_part in enumerate(pattern):
             if pattern_part[0] == AtomType.KEYWORD and atoms[i].get_atom_type() == AtomType.KEYWORD:
-                if atoms[i] != pattern_part[1]:
+                if atoms[i].get_value() != pattern_part[1]:
                     return False
             elif pattern_part[0] == AtomType.STRING and atoms[i].get_atom_type() == AtomType.STRING:
                 if pattern_part[1].fullmatch(atoms[i].get_value()) is None:

@@ -27,6 +27,7 @@ def parse_line(line: str) -> Statement:
                 if tmp_char in ESCAPES:
                     tmp += ESCAPES[tmp_char]
                     escape = False
+                    continue
                 else:
                     raise RuntimeError(f"Invalid escape char: {tmp_char}")
             elif tmp_char == '"':
@@ -34,7 +35,15 @@ def parse_line(line: str) -> Statement:
                 is_string = False
                 tmp = ""
                 continue
+            elif tmp_char == '\\':
+                escape = True
+                continue
+        elif tmp == "" and tmp_char == '"':
+            is_string = True
+            continue
         tmp += tmp_char
+    if tmp != "" and not is_string:
+        out.append(Atom(AtomType.KEYWORD, tmp))
     return Statement(out)
 
 
@@ -47,8 +56,9 @@ def parse(src: str) -> Sequence[Paragraph]:
             if len(paragraph) > 0:
                 out.append(Paragraph(paragraph))
                 paragraph = []
-
-        paragraph.append(parse_line(line))
+            paragraph.append(parse_line(line[1:]))
+        else:
+            paragraph.append(parse_line(line))
     if len(paragraph) > 0:
         out.append(Paragraph(paragraph))
     return tuple(out)

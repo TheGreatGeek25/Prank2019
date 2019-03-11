@@ -48,7 +48,7 @@ class IFText(IFElement):
     """Intermediate representation of a text element"""
 
     def __init__(self, text: str):
-        IFElement.__init__(self, self.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))
+        IFElement.__init__(self, text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>'))
         self.text = text
 
 
@@ -109,7 +109,7 @@ modifiers = (
 #               End Modifiers
 # ==========================================
 
-TEXT_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TEXT"), (AtomType.KEYWORD, re.compile("(?s).*")))
+TEXT_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TEXT"), (AtomType.STRING, re.compile("(?s).*")))
 IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
                  (AtomType.KEYWORD, "FROM"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
 
@@ -167,7 +167,7 @@ def _compile1_paragraph(paragraph: Paragraph) -> IFParagraph:
             break
 
     paragraph_statements = []
-    index = len(paragraph_mods)+1
+    index = len(paragraph_mods)
     while index < len(statements):
         tmp_statement, tmp_index = _compile1_next_statement_with_mods(statements[index:])
         paragraph_statements.append(tmp_statement)
