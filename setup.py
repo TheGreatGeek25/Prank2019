@@ -8,7 +8,11 @@ setup(
     package_data={
         '': ['LICENSE']
     },
+    entry_points={
+        'console_scripts': [
+            'coboml = coboml.__init__:main'
+        ]
+    },
 
-    url='thegreatgeek25.github.io/COBOML',
     license='Apache-2.0'
 )
