@@ -16,7 +16,7 @@ import coboml.parser as parser
 import coboml.compiler as compiler
 import coboml.util as util
 
-from sys import argv, stdin, stderr
+from sys import argv, stderr
 
 
 def compile_file(source_file, output_file):
@@ -28,13 +28,18 @@ def compile_str(source: str) -> str:
 
 
 def main():
-    if len(argv) > 1:
-        for file_name in argv[1:]:
-            source_file = open(file_name, 'r')
-            output_file = open(f'{file_name}.html', 'w')
-            compile_file(source_file, output_file)
-            source_file.close()
-            output_file.close()
+    if len(argv) == 2:
+        source_file = open(argv[1], 'r')
+        output_file = open(f'{argv[1]}.html', 'w')
+        compile_file(source_file, output_file)
+        source_file.close()
+        output_file.close()
+    elif len(argv) == 3:
+        source_file = open(argv[1], 'r')
+        output_file = open(argv[2], 'w')
+        compile_file(source_file, output_file)
+        source_file.close()
+        output_file.close()
     else:
-        print("No arguments: reading from STDIN", file=stderr)
-        print(compile_str(stdin.read()))
+        print("Missing arguments", file=stderr)
+        print('Usage: coboml <source-file> [output-file]')

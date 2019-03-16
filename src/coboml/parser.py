@@ -57,7 +57,7 @@ def parse_line(line: str) -> Statement:
             continue
         tmp += tmp_char
     if tmp != "" and not is_string:
-        out.append(Atom(AtomType.KEYWORD, tmp))
+        out.append(Atom(AtomType.KEYWORD, tmp.upper()))
     return Statement(out)
 
 
