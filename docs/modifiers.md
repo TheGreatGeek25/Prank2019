@@ -6,3 +6,4 @@ No description as provided for any modifiers because \<sarcasm\> this language i
 | with link to "insert URL here" |     N/A     |
 | with bold text                 |     N/A     |
 | with italic text               |     N/A     |
+| with strikethrough             |     N/A     |

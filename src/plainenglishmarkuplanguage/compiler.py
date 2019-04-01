@@ -107,6 +107,12 @@ def _mod_italic_function(element: IFElement) -> IFElement:
     return element
 
 
+MOD_STRIKETHROUGH_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "STRIKETHROUGH"))
+def _mod_strikethrough_function(element: IFElement) -> IFElement:
+    element.set_html(f'<s>{element.get_raw_html()}</s>')
+    return element
+
+
 MOD_LINK_PATTERN = ((AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "LINK"),
                     (AtomType.KEYWORD, "TO"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
 def _mod_link_builder_function(statement: Statement):
@@ -119,6 +125,7 @@ def _mod_link_builder_function(statement: Statement):
 modifiers = (
     (MOD_BOLD_PATTERN, IFModifierBuilder(lambda statement: IFModifier(_mod_bold_function))),
     (MOD_ITALIC_PATTERN, IFModifierBuilder(lambda statement: IFModifier(_mod_italic_function))),
+    (MOD_STRIKETHROUGH_PATTERN, IFModifierBuilder(lambda statement: IFModifier(_mod_strikethrough_function))),
     (MOD_LINK_PATTERN, IFModifierBuilder(_mod_link_builder_function))
 )
 
