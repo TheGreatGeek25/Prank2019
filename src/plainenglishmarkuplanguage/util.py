@@ -39,6 +39,9 @@ class Atom:
             return False
         return self.atom_type == other.get_atom_type() and self.value == other.get_value()
 
+    def __str__(self):
+        return f"Atom({self.atom_type}, {self.value})"
+
 
 class Statement:
 
@@ -60,6 +63,9 @@ class Statement:
                 if pattern_part[1].fullmatch(atoms[i].get_value()) is None:
                     return False
         return True
+
+    def __str__(self):
+        return str(tuple(map(str, self.atoms)))
 
 
 class Paragraph:
