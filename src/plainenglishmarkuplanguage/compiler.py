@@ -15,12 +15,12 @@
 import re
 from typing import Sequence, Callable
 
-import coboml.parser as parser
-from coboml.util import Statement, Paragraph, AtomType
+import plainenglishmarkuplanguage.parser as parser
+from plainenglishmarkuplanguage.util import Statement, Paragraph, AtomType
 
 
 class IFElement:  # TODO
-    """Intermediate representation of a COBOML element"""
+    """Intermediate representation of a Plain English Markup Language element"""
 
     def __init__(self, html: str):
         self.html = html
@@ -131,11 +131,11 @@ IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
                  (AtomType.KEYWORD, "FROM"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
 
 
-def compile_COBOML(src: str) -> str:
-    return compile_parsed_COBOML(parser.parse(src))
+def compile_plain_english_markup_language(src: str) -> str:
+    return compile_parsed_plain_english_markup_language(parser.parse(src))
 
 
-def compile_parsed_COBOML(parsed: Sequence[Paragraph]) -> str:
+def compile_parsed_plain_english_markup_language(parsed: Sequence[Paragraph]) -> str:
     ifparagraphs = tuple(map(_compile1_paragraph, parsed))
     header = '<html><body>'
     footer = '</body></html>'

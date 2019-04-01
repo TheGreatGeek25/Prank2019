@@ -14,7 +14,7 @@
 
 from typing import Sequence
 
-from coboml.util import Atom, AtomType, Statement, Paragraph
+from plainenglishmarkuplanguage.util import Atom, AtomType, Statement, Paragraph
 
 WITH = 'WITH'
 

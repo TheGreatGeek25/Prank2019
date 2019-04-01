@@ -1,16 +1,16 @@
 from setuptools import setup
 
 setup(
-    name='COBOML',
+    name='PlainEnglishMarkupLanguage',
     version='1.0.0',
-    packages=['coboml'],
+    packages=['plainenglishmarkuplanguage'],
     package_dir={'': 'src'},
     package_data={
         '': ['LICENSE']
     },
     entry_points={
         'console_scripts': [
-            'coboml = coboml.__init__:main'
+            'plainenglishmarkuplanguage = plainenglishmarkuplanguage.__init__:main'
         ]
     },
 

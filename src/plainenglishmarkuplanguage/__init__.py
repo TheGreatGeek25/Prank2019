@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import coboml.parser as parser
-import coboml.compiler as compiler
-import coboml.util as util
+import plainenglishmarkuplanguage.parser as parser
+import plainenglishmarkuplanguage.compiler as compiler
+import plainenglishmarkuplanguage.util as util
 
 from sys import argv, stderr
 
 
 def compile_file(source_file, output_file):
-    output_file.write(compiler.compile_COBOML(source_file.read()))
+    output_file.write(compiler.compile_plain_english_markup_language(source_file.read()))
 
 
 def compile_str(source: str) -> str:
-    return compiler.compile_COBOML(source)
+    return compiler.compile_plain_english_markup_language(source)
 
 
 def main():
@@ -42,4 +42,4 @@ def main():
         output_file.close()
     else:
         print("Missing arguments", file=stderr)
-        print('Usage: coboml <source-file> [output-file]')
+        print('Usage: plainenglishmarkuplanguage <source-file> [output-file]')
