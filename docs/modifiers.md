@@ -1,5 +1,5 @@
 
-No description as provided for any modifiers because \<sarcasm\> this language is never ambiguous in any way. \</sarcasm\> 
+No description as provided for any modifiers because this language is never ambiguous in any way.
 
 |            Modifier            | Description |
 |--------------------------------|-------------|

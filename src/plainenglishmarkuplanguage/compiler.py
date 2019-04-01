@@ -58,6 +58,16 @@ class IFParagraph(IFElement):
         return self.html.format(elements=''.join(map(lambda e: e.get_html(), self.elements))).format_map(self.params)
 
 
+class IFHeader(IFElement):
+
+    def __init__(self, text: str, level: int):
+        if level not in range(1, 7):
+            raise ValueError(f"{level} is not in range(1,7)")
+        tmp = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '<br/>')
+        IFElement.__init__(self, f"<h{level}>{tmp}")
+        self.text = text
+
+
 class IFText(IFElement):
     """Intermediate representation of a text element"""
 
@@ -66,7 +76,7 @@ class IFText(IFElement):
         self.text = text
 
 
-class IFImage(IFElement):  # TODO
+class IFImage(IFElement):
     """Intermediate representation of an image element"""
 
     def __init__(self, src: str):
@@ -134,6 +144,8 @@ modifiers = (
 # ==========================================
 
 TEXT_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TEXT"), (AtomType.STRING, re.compile("(?s).*")))
+TITLE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TITLE"), (AtomType.STRING, re.compile("(?s).")))
+SUBTITLE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "SUBTITLE"), (AtomType.STRING, re.compile("(?s).")))
 IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
                  (AtomType.KEYWORD, "FROM"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
 
@@ -161,6 +173,10 @@ def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFEl
 
     if main_statement.matches_pattern(TEXT_PATTERN):
         ifelement = IFText(main_statement.get_atoms()[2].get_value())
+    elif main_statement.matches_pattern(TITLE_PATTERN):
+        ifelement = IFHeader(main_statement.get_atoms()[2].get_value(), 1)
+    elif main_statement.matches_pattern(SUBTITLE_PATTERN):
+        ifelement = IFHeader(main_statement.get_atoms()[2].get_value(), 2)
     elif main_statement.matches_pattern(IMAGE_PATTERN):
         ifelement = IFImage(main_statement.get_atoms()[3].get_value())
     else:
