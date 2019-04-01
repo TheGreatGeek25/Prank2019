@@ -7,3 +7,5 @@ No description as provided for any elements because this language is never ambig
 | Add text "text"           |     N/A     |
 | Add title "title"         |     N/A     |
 | Add subtitle "subtitle"   |     N/A     |
+| Add table                 |     N/A     |
+| Add desk                  |     N/A     |
