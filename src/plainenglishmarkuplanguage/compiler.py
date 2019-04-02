@@ -150,6 +150,9 @@ TABLE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "TABLE"))
 DESK_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "DESK"))
 IMAGE_PATTERN = ((AtomType.KEYWORD, "ADD"), (AtomType.KEYWORD, "IMAGE"),
                  (AtomType.KEYWORD, "FROM"), (AtomType.STRING, re.compile(".*")))  # TODO: Validate URIs
+HTML_REGEX_PATTERN = ((AtomType.KEYWORD, "PARSE"), (AtomType.KEYWORD, "HTML"),
+                      (AtomType.KEYWORD, "WITH"), (AtomType.KEYWORD, "REGEX"))
+
 
 
 def compile_plain_english_markup_language(src: str) -> str:
@@ -185,6 +188,8 @@ def _compile1_next_statement_with_mods(statements: Sequence[Statement]) -> (IFEl
         ifelement = IFImage("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4wQBBhwE9K/n3wAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAD+SURBVGje7drRCsMgDIXhRH3/J27sLgplUFq1bazC7+1EzqfCEje1bDLzCDL5AAAAAAAAAAAAAAAAAAAA7kE1cAIAPEZ6ZZU1r64pY4yOgBii9zYvyyIiGvT9K9QhvYiklFxOYE/v9LxXszth6vT3Ad3SF9cPU6e/AxgqfTNgtPRtgAHTNwDGTF8LGDZ9FWDk9GXA4OkLpcT/d6FrzfNkd77vBx6ebbmY20rZYqlYnHYs7lW1R0Nz0UzcmEZL2X4CZrbtbl7zxbTrT48PJGbGCQAAAAAAAADTAM5qrRced73/Nritf1aqcIUAAAAAoFdTv/9WXt89dngE4Ap9PX4iDmnCXGGMIwAAAABJRU5ErkJggg==")
     elif main_statement.matches_pattern(DESK_PATTERN):
         ifelement = IFImage("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4wQBBh85h+r4DQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAImSURBVGje7VrRjgMhCBT0/7+4ah9MLmYVRcBt9+o+XC7XFWcEgeEKMUX35Afdw59D4BBQPsHWnEfPf9kkfwTzI2HCWqJ67sAhYAAU8HjgEPjeOpBT7v7OXzXJud5vJHDJ6N77GFmlIATu7q/XyzkHCO1HoCyHVvWIw6FLIJigv5yCR59zTjlRqwyrddiB3jkXYxzEErVW4NuwAz0zvjnoY4pjJrgDvbLn4/hH7oGBdZP2eAn9sgdWre9Gv+aBrnVO2KzmnKXTCUr0483aF6b3Z9W3+Gj0LA8MImccPzegnxOgrAs26y7RZ4XArORbex5NTvu8HlBm5DDVnTlPunYA4LxGLaTE7kAS1G3iLymycmCcTwXesCHQ7eDrlriLrLzw52IAGCuyiz6kZEO7i1DQdPXoEsRvFPV3QtQSKNpq4O4yXKCyRCdzA059+ENzoZ8nwCxDxwP/l4DFaPGjKRUffQFUHkDAukTUeb0VD5qeOec8KBpBfPC10ZqJYGzBiVKKA4rR1+W522a5lTmu+KYFWdAXc+UndROs0E8aE5UajJE/U3lSHbgN/XIIjUWZlU7fSKCdSbVYb/un0+mFDoHtd6CdQZSUz5wjTAtTsa+0huM0b6VcBZXEJoS2tsqXDso+hEoL1e5R9w7dPqL9I9Vu8DlQkUZ+1aDdEgA4M0OAydcXuu2gsQeUSoWzvD54BBRzOHXgENiShVJORfJ2MykVr+Kbo7nEb2qMSvm3VR8cAAAAAElFTkSuQmCC")
+    elif main_statement.matches_pattern(HTML_REGEX_PATTERN):
+        ifelement = IFElement('<a href="https://stackoverflow.com/a/1732454">H̸̡̪̯ͨ͊̽̅̾̎Ȩ̬̩̾͛ͪ̈́̀́͘ ̶̧̨̱̹̭̯ͧ̾ͬC̷̙̲̝͖ͭ̏ͥͮ͟Oͮ͏̮̪̝͍M̲̖͊̒ͪͩͬ̚̚͜Ȇ̴̟̟͙̞ͩ͌͝S̨̥̫͎̭ͯ̿̔̀ͅ</a>')
     else:
         raise ValueError(f"Unknown statement: {main_statement}")
 
