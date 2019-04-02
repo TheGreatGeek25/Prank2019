@@ -6,6 +6,8 @@ Each paragraph is a sequence of statements, the first of which is preceded by a 
 The first few statements in a paragraph can be modifiers that apply to the whole paragraph.
 The rest of the paragraph are elements with modifiers.
 
+See [Elements](elements.md) and [Modifiers](modifiers.md)
+
 ~~I don't want to write any more documentation~~ The rest is self-explanatory.
 
 
