@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='PlainEnglishMarkupLanguage',
-    version='1.0.0',
+    version='1.1.0',
     packages=['plainenglishmarkuplanguage'],
     package_dir={'': 'src'},
     package_data={
